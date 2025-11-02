@@ -53,9 +53,10 @@
 
 # Postman usage
 1. Open Postman
-2. Click Import
-3. Copy & Paste the raw URL given above.
-3. Set `{{base_url}}` to `http://127.0.0.1:8000/` in your Postman environment.
+2. Import [Ride API Collection](https://raw.githubusercontent.com/lanceallendavis/ride-api/refs/heads/main/postman/Ride.postman_collection.json)
+3. Import [Ride API Environment](https://raw.githubusercontent.com/lanceallendavis/ride-api/refs/heads/main/postman/Ride.postman_collection.json)
+4. Set Environment to Ride API
+5. Ensure that "{{base_url}}" is set to "http://127.0.0.1:8000/api"
 
     
 
