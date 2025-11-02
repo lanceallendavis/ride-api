@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from .models import RideUser
@@ -34,9 +34,7 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
                 "data": RideUserSerializer(user).data,
                 "message": f"{user.username} is registered successfully.",
                 "status": "success"}
-            , 
-            status=status.HTTP_200_OK
-        )
+            , status=status.HTTP_200_OK)
 
     # Update user role (separated from updating user's personal information)
     # as it is a different 'concern'.
@@ -52,7 +50,7 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
             return Response({
                 "error": "Invalid role requested. ",
                 "status": "failed"
-            },status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         user = self.get_object() 
         current_role = user.get_role_display()       

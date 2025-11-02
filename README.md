@@ -38,7 +38,7 @@
         - Change role to admin
 
 ### API USAGE ###
-# For API endpoints, refer to the Postman collection for easy guidance.
+# For API endpoints, refer to the Postman collection below for easy guidance.
 # It is recommended to use the Postman collection for testing the API in full.
 # The Postman collection is easy to use since it is a top-down approach in
 # making requests starting with 'api/login/' to fetch an access token
@@ -46,10 +46,12 @@
 # If an API endpoint being tested responds with an 'invalid token', 
 # just make a request in 'api/refresh/' endpoint and retest.
 # The postman collection automatically sets the access_token(Bearer Token)
-# and the refresh token for fetching a new access token
+# and the refresh token for fetching a new access token.
+# Also: non-admin users that are 'logged in' will only get 'Unauthorized'
+# responses in ALL endpoints(as required)
 
 
-### POSTMAN COLLECTION """
+### POSTMAN COLLECTION ###
 [Download Ride API Postman Collection](https://raw.githubusercontent.com/lanceallendavis/ride-api/refs/heads/main/postman/Ride.postman_collection.json)
 
 # Postman usage
