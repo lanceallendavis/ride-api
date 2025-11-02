@@ -26,6 +26,7 @@
 # This step is vital to accessing the API as it is only authorized for 'Admins'
 # since it checks if the user logged in has a role of 'admin' AND is an Admin 
 # specifically in Django or 'is_superuser' is True
+# See: api/permissions/IsRideUserAdmin
 6. Change superuser's role
     In terminal:
         - 'python manage.py runserver'

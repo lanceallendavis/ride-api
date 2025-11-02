@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .models import RideUser
 from .serializers import RideUserSerializer, CreateRideUserSerializer
-from .permissions import IsRideAdmin
+from .permissions import IsRideUserAdmin
 
 class RideUserViewset(viewsets.ReadOnlyModelViewSet):
     """
@@ -16,7 +16,7 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
 
     queryset = RideUser.objects.all()
     serializer_class = RideUserSerializer
-    permission_classes = [IsRideAdmin, IsAdminUser]
+    permission_classes = [IsRideUserAdmin, IsAdminUser]
 
     # Create/register new user
     @action(
