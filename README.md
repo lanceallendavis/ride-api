@@ -46,6 +46,17 @@
 # just make a request in 'api/refresh/' endpoint and retest.
 # The postman collection automatically sets the access_token(Bearer Token)
 # and the refresh token for fetching a new access token
+
+
+### POSTMAN COLLECTION """
+[Download Ride API Postman Collection](https://raw.githubusercontent.com/lanceallendavis/ride-api/refs/heads/main/postman/Ride.postman_collection.json)
+
+# Postman usage
+1. Open Postman
+2. Click Import
+3. Copy & Paste the raw URL given above.
+3. Set `{{base_url}}` to `http://127.0.0.1:8000/` in your Postman environment.
+
     
 
 ### CODE NOTES ###
