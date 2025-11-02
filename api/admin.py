@@ -20,7 +20,4 @@ class RideUserAdmin(UserAdmin):
         ('Permissions', {'fields': ('role', 'is_active',)}),
     )
 
-    def get_queryset(self, request):
-        return self.model.objects.all()
-
 
