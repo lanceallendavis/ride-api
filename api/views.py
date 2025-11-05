@@ -182,13 +182,13 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
 
         RideEvent.objects.create(
             ride=ride,
-            description=RideEvent.get_description_by_status(Ride.StatusChoices.BOOKED)
+            description=RideEvent.get_description_by_status(Ride.StatusChoices.PICKUP)
         )
 
 
         return Response({
             "data": RideSerializer(ride).data,
-            "message": f"{ride.rider.username} booked a ride.",
+            "message": f"{ride.rider.username} will be picked up soon.",
             "status": "success"
         }, status=status.HTTP_200_OK)
     

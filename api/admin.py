@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import RideUser, Ride, RideEvent
 
 # For testing 'over 1 hour' trips
-RideEvent._meta.get_field('created').editable = True
+# RideEvent._meta.get_field('created').editable = True
 
 @admin.register(RideUser)
 class RideUserAdmin(UserAdmin):

@@ -26,7 +26,6 @@ class RideUser(AbstractUser):
 
 class Ride(models.Model):
     class StatusChoices(models.TextChoices):
-        BOOKED = 'BK', 'Booked'
         PICKUP = 'PU', 'Pick-Up'
         CANCELLED = 'CA', 'Cancelled'
         ENROUTE = 'ER', 'En-route'
@@ -53,7 +52,7 @@ class Ride(models.Model):
     status = models.CharField(
         max_length=15,
         choices=StatusChoices.choices,
-        default=StatusChoices.BOOKED
+        default=StatusChoices.PICKUP
     )
     
     objects = models.Manager()
@@ -73,7 +72,6 @@ class RideEvent(models.Model):
     @classmethod
     def get_description_by_status(cls, ride_status):
         descriptions = {
-            Ride.StatusChoices.BOOKED: "Finding a driver. ",
             Ride.StatusChoices.PICKUP: "Driver is on the way. ",
             Ride.StatusChoices.CANCELLED: "Booking is cancelled. ",
             Ride.StatusChoices.ENROUTE: "On the way to destination. ",
