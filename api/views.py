@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
 
 from .models import RideUser, Ride, RideEvent
 from .serializers import (
@@ -16,6 +18,7 @@ from .serializers import (
 )
 from .permissions import IsRideUserAdmin
 from .pagination import RidesPagination
+from .querysets import calculate_distance
 
 
 class RideUserViewset(viewsets.ReadOnlyModelViewSet):
@@ -139,12 +142,32 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
     change of mind, should book a new ride instead. Hence,
     status of ride should be sent as 'cancelled.'
     """
-    queryset = Ride.recents.select_related('driver', 'rider').prefetch_related('events')
+    queryset = Ride.objects.select_related('driver', 'rider').prefetch_related('events')
     serializer_class = RideSerializer
     permission_classes = [IsRideUserAdmin, IsAdminUser]
     pagination_class = RidesPagination
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['status', 'rider__email']
+    ordering_fields = ['pickup_time', 'distance_km']  
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.action == 'list':
+            queryset = Ride.recents.select_related('driver', 'rider').prefetch_related('events')
+            
+            lat = self.request.query_params.get('lat')
+            long = self.request.query_params.get('long')
+            
+            # Check if calculating distance, need b
+            if (lat and not long) or (not lat and long):
+                
+                return queryset
+            
+            queryset = calculate_distance(queryset, lat, long)
+
+        return queryset
+
 
     # Book or 'create' a ride.
     @action(

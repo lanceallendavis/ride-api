@@ -57,10 +57,19 @@ class RideSerializer(serializers.ModelSerializer):
     rider = RideUserSerializer(read_only=True)
     driver = RideUserSerializer(read_only=True)
     events = RideEventSerializer(many=True, read_only=True)
+    distance_km = serializers.SerializerMethodField()
 
     class Meta:
         model = Ride
         fields = "__all__"
+
+    def get_distance_km(self, obj):
+        distance_km = getattr(obj, 'distance_km', None)
+
+        if not distance_km:
+            return None
+
+        return round(distance_km, 2)
 
 
 class CreateRideSerializer(serializers.ModelSerializer):

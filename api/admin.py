@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
 from .models import RideUser, Ride, RideEvent
+
+# For testing 'over 1 hour' trips
+RideEvent._meta.get_field('created').editable = True
 
 @admin.register(RideUser)
 class RideUserAdmin(UserAdmin):
@@ -29,7 +33,9 @@ class RideUserAdmin(UserAdmin):
 
 class RideEventInline(admin.StackedInline):
     model = RideEvent
-    readonly_fields = ('description', 'created')
+    readonly_fields = ('description',)
+    list_editable = ('created',)
+
 
 
 @admin.register(Ride)
