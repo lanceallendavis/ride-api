@@ -85,9 +85,10 @@ since auto_now_add=True is implemented in models which is a Django feature
 ### therefore unnecessary to wrap it in a Viewset
 
 ### For views, ReadOnlyModelViewsets are used as it is to prevent undesired/accidental/invalid requests other than 'GET' in BASE api urls such as 'api/users/'.
+### Also added comments/notes in endpoints(viewsets).
 
 ### Default SQLite over MySQL/PostgreSQL for ease of access/use/testing for the assessment
-### Containerizing into a Docker image/volume also adds an additional
+### Containerizing into a Docker image/volume also adds an additional step for setup
 
 
 # CHALLENGES FACED #

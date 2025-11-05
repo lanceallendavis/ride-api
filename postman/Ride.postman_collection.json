@@ -50,12 +50,82 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get New Token(refresh)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = pm.response.json();\r",
+									"pm.environment.set(\"access_token\", data.access);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh\": \"{{refresh_token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Ride Users",
 			"item": [
+				{
+					"name": "Get Ride User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/3/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"3",
+								""
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get Ride User List",
 					"request": {
@@ -78,6 +148,575 @@
 							],
 							"path": [
 								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride User(Driver)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"johnsmith\",\r\n  \"first_name\": \"John\",\r\n  \"last_name\": \"Smith\",\r\n  \"email\": \"johnsmith@example.com\",\r\n  \"role\": \"DR\",\r\n  \"password\": \"!Password123\",\r\n  \"phone_number\": \"+639123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride User(Rider)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"emmastone1\",\r\n  \"first_name\": \"Emma\",\r\n  \"last_name\": \"Stone\",\r\n  \"email\": \"emmastone@example.com\",\r\n  \"role\": \"RD\",\r\n  \"password\": \"!Password123\",\r\n  \"phone_number\": \"+639123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Ride User to Inactive",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/3/set_inactive/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"3",
+								"set_inactive",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Information",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"Lana\",\r\n  \"last_name\": \"Delrey\",\r\n  \"email\": \"lanadelrey@example.com\",\r\n  \"phone_number\": \"+639171234569\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/3/update_user/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"3",
+								"update_user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rides",
+			"item": [
+				{
+					"name": "Get Ride List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ride",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ride List with pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides/?page_size=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								""
+							],
+							"query": [
+								{
+									"key": "page_size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ride List: Email/Status Filter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides?email=emmastone@example.com&status=PU",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "emmastone@example.com"
+								},
+								{
+									"key": "status",
+									"value": "PU"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ride List: Distance(lat/long)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides?email=emmastone@example.com&status=PU",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "emmastone@example.com"
+								},
+								{
+									"key": "status",
+									"value": "PU"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ride List: Filter+Sort",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rides/?lat=14.5995&long=120.9842&status=BK&email=emmawatson@example.com&ordering=distance_km",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								""
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "14.5995"
+								},
+								{
+									"key": "long",
+									"value": "120.9842"
+								},
+								{
+									"key": "status",
+									"value": "BK"
+								},
+								{
+									"key": "email",
+									"value": "emmawatson@example.com"
+								},
+								{
+									"key": "ordering",
+									"value": "distance_km"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickup_lat\": \"30.5906\",\r\n  \"pickup_long\": \"120.9810\",\r\n  \"dropoff_lat\": \"14.5547\",\r\n  \"dropoff_long\": \"121.0244\",\r\n  \"driver\": 8,\r\n  \"rider\": 12,\r\n  \"pickup_time\": \"2025-11-05T14:30:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/rides/book/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								"book",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Forever Ride",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/rides/1/delete_forever/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								"1",
+								"delete_forever",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ride Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"PU\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/rides/4/update_status/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rides",
+								"4",
+								"update_status",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ride Events",
+			"item": [
+				{
+					"name": "Create Ride Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickup_lat\": \"30.5906\",\r\n  \"pickup_long\": \"120.9810\",\r\n  \"dropoff_lat\": \"14.5547\",\r\n  \"dropoff_long\": \"121.0244\",\r\n  \"driver\": 8,\r\n  \"rider\": 12,\r\n  \"pickup_time\": \"2025-11-05T14:30:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/events/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"events",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride Event Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickup_lat\": \"30.5906\",\r\n  \"pickup_long\": \"120.9810\",\r\n  \"dropoff_lat\": \"14.5547\",\r\n  \"dropoff_long\": \"121.0244\",\r\n  \"driver\": 8,\r\n  \"rider\": 12,\r\n  \"pickup_time\": \"2025-11-05T14:30:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/events/9/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"events",
+								"9",
 								""
 							]
 						}
