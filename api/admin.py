@@ -11,6 +11,7 @@ class RideUserAdmin(UserAdmin):
     list_display = (
         'id',
         'username', 
+        'email',
         'first_name', 
         'last_name', 
         'role', 
@@ -20,7 +21,7 @@ class RideUserAdmin(UserAdmin):
     list_editable = ('is_active',)
     
     fieldsets = (
-        ('Authentication', {'fields': ('username', 'password')}),
+        ('Authentication', {'fields': ('username', 'email', 'password')}),
         ('Personal Information', {'fields': ('first_name', 'last_name',)}),
         ('Permissions', {'fields': ('role', 'is_active',)}),
     )

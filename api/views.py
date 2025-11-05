@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -14,6 +15,7 @@ from .serializers import (
     RideEventSerializer
 )
 from .permissions import IsRideUserAdmin
+from .pagination import RidesPagination
 
 
 class RideUserViewset(viewsets.ReadOnlyModelViewSet):
@@ -137,10 +139,12 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
     change of mind, should book a new ride instead. Hence,
     status of ride should be sent as 'cancelled.'
     """
-
-    queryset = Ride.objects.select_related('driver', 'rider').prefetch_related('events')
+    queryset = Ride.recents.select_related('driver', 'rider').prefetch_related('events')
     serializer_class = RideSerializer
     permission_classes = [IsRideUserAdmin, IsAdminUser]
+    pagination_class = RidesPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status', 'rider__email']
 
     # Book or 'create' a ride.
     @action(

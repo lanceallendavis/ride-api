@@ -8,7 +8,8 @@ class RideUserSerializer(serializers.ModelSerializer):
         model = RideUser
         fields = [
             'id', 
-            'username', 
+            'username',
+            'email', 
             'first_name', 
             'last_name', 
             'role',
@@ -23,6 +24,7 @@ class CreateRideUserSerializer(serializers.ModelSerializer):
         model = RideUser
         fields = [
             'username',
+            'email',
             'password',
             'first_name',
             'last_name',
@@ -49,7 +51,7 @@ class RideEventSerializer(serializers.ModelSerializer):
             'created'
         ]
         read_only_fields = ['created']
-        
+
 
 class RideSerializer(serializers.ModelSerializer):
     rider = RideUserSerializer(read_only=True)

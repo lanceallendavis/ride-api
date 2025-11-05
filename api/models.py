@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .managers import RecentRidesManager
 
 
 class RideUser(AbstractUser):
@@ -54,6 +55,9 @@ class Ride(models.Model):
         choices=StatusChoices.choices,
         default=StatusChoices.BOOKED
     )
+    
+    objects = models.Manager()
+    recents = RecentRidesManager()
 
 
 class RideEvent(models.Model):
