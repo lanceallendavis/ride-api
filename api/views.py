@@ -136,6 +136,7 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = RideSerializer
     permission_classes = [IsRideUserAdmin, IsAdminUser]
 
+    # Book or 'create' a ride.
     @action(
         detail=False, 
         methods=['post'],
@@ -152,6 +153,7 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
             "status": "success"
         }, status=status.HTTP_200_OK)
     
+    # Delete ride(NOT SOFT-DELETE)
     @action(
         detail=True,
         methods=['delete']

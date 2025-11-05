@@ -56,6 +56,9 @@ class Ride(models.Model):
     )
 
 
+class RideEvent(models.Model):
+    
+
 
 
 
