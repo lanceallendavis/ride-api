@@ -87,6 +87,17 @@ since auto_now_add=True is implemented in models which is a Django feature
 ### For views, ReadOnlyModelViewsets are used as it is to prevent undesired/accidental/invalid requests other than 'GET' in BASE api urls such as 'api/users/'.
 ### Also added comments/notes in endpoints(viewsets).
 
+# ReadOnlyModelViewsets vs Viewsets/ModelViewset
+### More compelling to declare a hybrid of specific actions/methods + readonly list/retrieve than implementing generics such as list/retrieve/destroy/update/partial_update
+### with the risk of unintentional request types or data sent due to 'same endpoint' structure ie: POST/create and GET/list are different but share the same endpoint '/api/rides/'
+
+### Used normal Viewset only for RideEvent since it is rather optimal or better
+### to show Ride(s) with RideEvent(s), than RideEvent(s) and specify which ride.
+### RideEvent SHOULD NOT be tampered(edit is not allowed).
+### Delete/Destroy should only be done for compliance/admin.
+### Hence, list/retrieve/update/partial_update are NOT ALLOWED.
+### destroy is 'limited'.
+
 ### Default SQLite over MySQL/PostgreSQL for ease of access/use/testing for the assessment
 ### Containerizing into a Docker image/volume also adds an additional step for setup
 
