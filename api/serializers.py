@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import RideUser, Ride
+from .models import RideUser, Ride, RideEvent
 
 
 class RideUserSerializer(serializers.ModelSerializer):
@@ -37,9 +37,24 @@ class CreateRideUserSerializer(serializers.ModelSerializer):
         return user
 
 
+class RideEventSerializer(serializers.ModelSerializer):
+    ride = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = RideEvent
+        fields = [
+            'id',
+            'ride',
+            'description',
+            'created'
+        ]
+        read_only_fields = ['created']
+        
+
 class RideSerializer(serializers.ModelSerializer):
     rider = RideUserSerializer(read_only=True)
     driver = RideUserSerializer(read_only=True)
+    events = RideEventSerializer(many=True, read_only=True)
 
     class Meta:
         model = Ride

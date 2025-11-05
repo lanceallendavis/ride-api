@@ -57,13 +57,27 @@ class Ride(models.Model):
 
 
 class RideEvent(models.Model):
-    
+    ride = models.ForeignKey(
+        Ride,
+        on_delete=models.CASCADE,
+        related_name='events'
+    )
 
+    description = models.CharField(max_length=100, default='')
+    created = models.DateTimeField(auto_now_add=True)
 
+    @classmethod
+    def get_description_by_status(cls, ride_status):
+        descriptions = {
+            Ride.StatusChoices.BOOKED: "Finding a driver. ",
+            Ride.StatusChoices.PICKUP: "Driver is on the way. ",
+            Ride.StatusChoices.CANCELLED: "Booking is cancelled. ",
+            Ride.StatusChoices.ENROUTE: "On the way to destination. ",
+            Ride.StatusChoices.DROPOFF: "Arrived at destination. ",
+            Ride.StatusChoices.COMPLETED: "Ride completed. ",
+        }
 
+        if ride_status not in descriptions:
+            raise ValueError(f"Status '{ride_status}' does not exist. ")
 
-
-    
-
-
-
+        return descriptions[ride_status]

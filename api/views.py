@@ -1,16 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from .models import RideUser, Ride
+from .models import RideUser, Ride, RideEvent
 from .serializers import (
     RideUserSerializer, 
     CreateRideUserSerializer,
     RideSerializer,
-    CreateRideSerializer
+    CreateRideSerializer,
+    RideEventSerializer
 )
 from .permissions import IsRideUserAdmin
 
@@ -18,6 +19,8 @@ from .permissions import IsRideUserAdmin
 class RideUserViewset(viewsets.ReadOnlyModelViewSet):
     """
     - 'CRUD' for Users(RideUser)
+    - Change role, set inactive, and update profile are separated
+    since their purposes/concerns differ from one another.
     """
 
     queryset = RideUser.objects.all()
@@ -129,10 +132,13 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
 
 class RideViewset(viewsets.ReadOnlyModelViewSet):
     """
-    - 'CRUD' for Rides
+    - For Rides (list, create/book, delete ONLY)
+    - Edit should not be allowed, in irl: When there's a 
+    change of mind, should book a new ride instead. Hence,
+    status of ride should be sent as 'cancelled.'
     """
 
-    queryset = Ride.objects.all()
+    queryset = Ride.objects.select_related('driver', 'rider').prefetch_related('events')
     serializer_class = RideSerializer
     permission_classes = [IsRideUserAdmin, IsAdminUser]
 
@@ -146,6 +152,12 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         ride = serializer.save()
+
+        RideEvent.objects.create(
+            ride=ride,
+            description=RideEvent.get_description_by_status(Ride.StatusChoices.BOOKED)
+        )
+
 
         return Response({
             "data": RideSerializer(ride).data,
@@ -166,3 +178,91 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
             "message": f"Ride {pk} is deleted forever. ",
             "status": "success"
         }, status=status.HTTP_200_OK)
+    
+    # Update ride status and add as an event
+    @action(
+        detail=True,
+        methods=['post']
+    )
+    def update_status(self, request, pk=None):
+        ride = self.get_object()
+        ride_status = request.data.get("status")
+
+        if not ride_status:
+
+            return Response({
+                "message": "Status code is required. ", 
+                "status": "failed"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if ride_status not in Ride.StatusChoices.values:
+
+            return Response({
+                "message": "Status code is required. ", 
+                "status": "failed"
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        ride.status = ride_status
+        ride.save()
+
+        try:
+            description = RideEvent.get_description_by_status(ride_status)
+        except ValueError as e:
+            return Response({
+                "message": str(e), 
+                "status": "failed"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        ride_event = RideEvent.objects.create(ride=ride, description=description)
+
+        return Response({
+            "data": RideEventSerializer(ride_event).data,
+            "message": f"Ride status changed to '{ride.get_status_display()}'. ",
+            "status": "success"
+        }, status=status.HTTP_200_OK)
+
+
+class RideEventViewset(viewsets.ViewSet):
+    """
+    - Create and Delete only for Ride Events.
+    - List of events should be given in Ride Viewset in 'retrieving' a ride.
+    - A change in status is an event, but an event is not always a change in status.
+    Hence, status change should not be in this endpoint/viewset.
+    - Editing should not be allowed because ride events are basically 'historical
+    data' and therefore should not be tampered with.
+    - Delete is allowed for cleanup/duplicates/accidentals as form for compliance
+    """
+    permission_classes = [IsRideUserAdmin, IsAdminUser]
+
+    def create(self, request):
+        ride_id = request.data.get("ride_id")
+        description = request.data.get("description")
+
+        if not ride_id or not description:
+
+            return Response({
+                "message": "Both 'ride_id' and 'description' are required. ",
+                "status": "failed"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        ride = get_object_or_404(Ride, id=ride_id)
+
+        ride_event = RideEvent.objects.create(
+            ride=ride,
+            description=description
+        )
+
+        return Response({
+            "data": RideEventSerializer(ride_event).data,
+            "message": f"Event '{ride_event.description}' is added to ride {ride.id}. ",
+            "status": "success"
+        }, status=status.HTTP_200_OK)
+
+    def destroy(self, request, pk=None):
+        ride_event = get_object_or_404(RideEvent, id=pk)
+        ride_event.delete()
+
+        return Response(
+            {"message": f"Ride event {pk} deleted successfully.", "status": "success"},
+            status=status.HTTP_204_NO_CONTENT
+        )
