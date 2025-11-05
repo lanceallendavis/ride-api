@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import RideUser
+from .models import RideUser, Ride
 
 
 class RideUserSerializer(serializers.ModelSerializer):
@@ -35,3 +35,9 @@ class CreateRideUserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class RideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ride
+        fields = "__all__"

@@ -47,6 +47,11 @@ class Ride(models.Model):
     dropoff_lat = models.DecimalField(max_digits=22, decimal_places=16)
     dropoff_long = models.DecimalField(max_digits=22, decimal_places=16)
     pickup_time = models.DateTimeField()
+    status = models.CharField(
+        max_length=15,
+        choices=StatusChoices.choices,
+        default=StatusChoices.BOOKED
+    )
 
 
 

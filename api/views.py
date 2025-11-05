@@ -9,6 +9,7 @@ from .models import RideUser
 from .serializers import RideUserSerializer, CreateRideUserSerializer
 from .permissions import IsRideUserAdmin
 
+
 class RideUserViewset(viewsets.ReadOnlyModelViewSet):
     """
     - 'CRUD' for Users(RideUser)
@@ -118,3 +119,7 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
             "message": f"{user.username}'s user information is updated.",
             "status": "success"
         }, status=status.HTTP_200_OK)
+    
+
+class RideViewset(viewsets.ReadOnlyModelViewSet):
+    pass
