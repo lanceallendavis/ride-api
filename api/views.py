@@ -5,8 +5,13 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from .models import RideUser
-from .serializers import RideUserSerializer, CreateRideUserSerializer
+from .models import RideUser, Ride
+from .serializers import (
+    RideUserSerializer, 
+    CreateRideUserSerializer,
+    RideSerializer,
+    CreateRideSerializer
+)
 from .permissions import IsRideUserAdmin
 
 
@@ -30,12 +35,11 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        return Response(
-            {
-                "data": RideUserSerializer(user).data,
-                "message": f"{user.username} is registered successfully.",
-                "status": "success"}
-            , status=status.HTTP_200_OK)
+        return Response({
+            "data": RideUserSerializer(user).data,
+            "message": f"{user.username} is registered successfully.",
+            "status": "success"
+        }, status=status.HTTP_200_OK)
 
     # Update user role (separated from updating user's personal information)
     # as it is a different 'concern'.
@@ -72,10 +76,10 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
     def set_inactive(self, request, pk=None):
         user = self.get_object()
         if not user.is_active:
-            return Response(
-                {
-                    "message": f"{user.username} is already set to inactive. ",
-                    "status": "failed"
+
+            return Response({
+                "message": f"{user.username} is already set to inactive. ",
+                "status": "failed"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         user.is_active = False
@@ -103,10 +107,12 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
         # Check unwanted/invalid fields in the request
         invalid_fields = [field for field in request.data if field not in valid_fields]
         if invalid_fields:
+
             return Response({
                 "message": f"Invalid fields: {', '.join(invalid_fields)}",
                 "status": "failed"
             }, status=status.HTTP_400_BAD_REQUEST)
+        
         user = self.get_object()
 
         for field in valid_fields:
@@ -122,4 +128,39 @@ class RideUserViewset(viewsets.ReadOnlyModelViewSet):
     
 
 class RideViewset(viewsets.ReadOnlyModelViewSet):
-    pass
+    """
+    - 'CRUD' for Rides
+    """
+
+    queryset = Ride.objects.all()
+    serializer_class = RideSerializer
+    permission_classes = [IsRideUserAdmin, IsAdminUser]
+
+    @action(
+        detail=False, 
+        methods=['post'],
+        serializer_class=CreateRideSerializer
+    )
+    def book(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        ride = serializer.save()
+
+        return Response({
+            "data": RideSerializer(ride).data,
+            "message": f"{ride.rider.username} booked a ride.",
+            "status": "success"
+        }, status=status.HTTP_200_OK)
+    
+    @action(
+        detail=True,
+        methods=['delete']
+    )
+    def delete_forever(self, request, pk=None):
+        ride = self.get_object()
+        ride.delete()
+
+        return Response({
+            "message": f"Ride {pk} is deleted forever. ",
+            "status": "success"
+        }, status=status.HTTP_200_OK)

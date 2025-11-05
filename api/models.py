@@ -34,13 +34,15 @@ class Ride(models.Model):
 
     rider = models.ForeignKey(
         RideUser, 
-        on_delete=models.CASCADE,
-        related_name='rider_rides'
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='rider_rides',
     )
     driver = models.ForeignKey(
         RideUser, 
-        on_delete=models.CASCADE,
-        related_name='driver_rides'
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='driver_rides',
     )
     pickup_lat = models.DecimalField(max_digits=22, decimal_places=16)
     pickup_long = models.DecimalField(max_digits=22, decimal_places=16)

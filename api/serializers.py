@@ -38,6 +38,23 @@ class CreateRideUserSerializer(serializers.ModelSerializer):
 
 
 class RideSerializer(serializers.ModelSerializer):
+    rider = RideUserSerializer(read_only=True)
+    driver = RideUserSerializer(read_only=True)
+
     class Meta:
         model = Ride
         fields = "__all__"
+
+
+class CreateRideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ride
+        fields = [
+            'rider',
+            'driver',
+            'pickup_lat',
+            'pickup_long',
+            'dropoff_lat',
+            'dropoff_long',
+            'pickup_time'
+        ]
