@@ -8,7 +8,7 @@ app_name = 'api'
 router = routers.DefaultRouter()
 router.register('users', RideUserViewset)
 router.register('rides', RideViewset)
-router.register('ride_events', RideEventViewset, basename='rideevent')
+router.register('events', RideEventViewset, basename='rideevent')
 
 urlpatterns = [
     path('', include(router.urls)),

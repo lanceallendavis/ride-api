@@ -37,6 +37,9 @@
         - Click on your superuser username.
         - Change role to admin
 
+7. Uncomment # RideEvent._meta.get_field('created').editable = True from admin.py in order to test 'rides over 1 hour' for the report instantly without waiting
+since auto_now_add=True is implemented in models which is a Django feature
+
 ### API USAGE ###
 # For API endpoints, refer to the Postman collection below for easy guidance.
 # It is recommended to use the Postman collection for testing the API in full.
@@ -61,7 +64,14 @@
 4. Set Environment to Ride API
 5. Ensure that "{{base_url}}" is set to "http://127.0.0.1:8000/api"
 
-    
+
+### BONUS QUERY: REPORT ###
+1. From the project's root directory, run 'python api/scripts/export_monthly.py'
+2. Check below, there should be a file called 'driver_trips_over_1_hour.xlsx
+# Note: it is an excel sheet
+# The raw query is also there
+
+
 
 ### CODE NOTES ###
 
