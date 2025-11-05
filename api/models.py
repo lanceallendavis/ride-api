@@ -20,6 +20,7 @@ class RideUser(AbstractUser):
     
     def __str__(self):
         return f'{self.username}({self.get_role_display()})'
+    
 
 
 class Ride(models.Model):
@@ -41,14 +42,17 @@ class Ride(models.Model):
         on_delete=models.CASCADE,
         related_name='driver_rides'
     )
-
     pickup_lat = models.DecimalField(max_digits=22, decimal_places=16)
     pickup_long = models.DecimalField(max_digits=22, decimal_places=16)
     dropoff_lat = models.DecimalField(max_digits=22, decimal_places=16)
     dropoff_long = models.DecimalField(max_digits=22, decimal_places=16)
+    pickup_time = models.DateTimeField()
 
 
-    
+
+
+
+
     
 
 
