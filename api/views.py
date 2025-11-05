@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.db.models import Prefetch
+from django.utils import timezone
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -142,7 +145,6 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
     change of mind, should book a new ride instead. Hence,
     status of ride should be sent as 'cancelled.'
     """
-    queryset = Ride.objects.select_related('driver', 'rider').prefetch_related('events')
     serializer_class = RideSerializer
     permission_classes = [IsRideUserAdmin, IsAdminUser]
     pagination_class = RidesPagination
@@ -151,11 +153,15 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['pickup_time', 'distance_km']  
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        cutoff = timezone.now() - timedelta(hours=24)
+        recent_events = Prefetch(
+            'events',
+            queryset=RideEvent.objects.filter(created__gte=cutoff),
+            to_attr='recent_events',
+        )
+        queryset = Ride.objects.select_related('driver', 'rider').prefetch_related(recent_events)
 
-        if self.action == 'list':
-            queryset = Ride.recents.select_related('driver', 'rider').prefetch_related('events')
-            
+        if self.action == 'list':            
             lat = self.request.query_params.get('lat')
             long = self.request.query_params.get('long')
             
@@ -166,7 +172,7 @@ class RideViewset(viewsets.ReadOnlyModelViewSet):
             
             queryset = calculate_distance(queryset, lat, long)
 
-        return queryset
+        return queryset.order_by('-pickup_time')
 
 
     # Book or 'create' a ride.

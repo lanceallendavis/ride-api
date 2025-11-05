@@ -56,7 +56,7 @@ class RideEventSerializer(serializers.ModelSerializer):
 class RideSerializer(serializers.ModelSerializer):
     rider = RideUserSerializer(read_only=True)
     driver = RideUserSerializer(read_only=True)
-    events = RideEventSerializer(many=True, read_only=True)
+    recent_events = RideEventSerializer(many=True, read_only=True)
     distance_km = serializers.SerializerMethodField()
 
     class Meta:
